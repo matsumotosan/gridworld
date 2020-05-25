@@ -34,4 +34,5 @@ class Agent:
 
     def reset(self):
         self.pos = self.start_pos
-        self.policy = dict(up=0.25, down=0.25, left=0.25, right=0.25)
+        self.history = [self.pos]
+        self.points = 0.0
