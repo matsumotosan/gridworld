@@ -7,10 +7,12 @@ TERM_POS = [(0, 9), (9, 9), (9, 0)]
 BLOCKED_POS = [(5, 5)]
 ACTIONS = {'pawn':   {'up': (0, 1),   'down': (0, -1), 'left': (-1, 0), 'right': (1, 0)},
            'bishop': {'ur': (1, 1),   'dr': (1, -1),   'dl': (-1, -1),  'ul': (-1, 1)},
+           'queen':  {'up': (0, 1),   'ur': (1, 1),    'rt': (1, 0),    'dr': (1, -1),
+                      'dn': (0, -1),  'dl': (-1, -1),  'lf': (-1, 0),   'ul': (-1, 1)},
            'knight': {'uur': (1, 2),  'urr': (2, 1),   'drr': (2, -1),  'ddr': (1, -2),
                       'uul': (-1, 2), 'ull': (-2, 1),  'dll': (-2, -1), 'ddl': (-1, -2)}}
-AGENTS = ['pawn', 'bishop', 'knight']
-AGENT_IDX = 0
+AGENTS = ['pawn', 'bishop', 'queen', 'knight']
+AGENT_IDX = 2
 N = 100
 
 
@@ -44,7 +46,7 @@ def main():
         # Reset agent position
         agent.reset()
 
-    # Average number of times visited
+    # Average number of times visited for each grid
     freq /= N
 
     # Mask for blocked sites
