@@ -1,25 +1,17 @@
-from gridworld.gridworld import GridWorld
-from gridworld.agent import Agent
-from gridworld.game import Game
-from tqdm import trange
-import numpy as np
-import collections
-import seaborn as sns
-import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
+from gridworld.examples import *
 
 # Define game specs
 HEIGHT = 10
 WIDTH = 10
-TERM_POS = [(0, 9), (9, 9), (9, 0), (5, 5)]
-BLOCKED_POS = [(5, 4), (4, 5), (1, 0)]
+TERM_POS = [(0, 9), (9, 9), (9, 0)]
+BLOCKED_POS = [(5, 5)]
 ACTIONS = {'pawn':   {'up': (0, 1),   'down': (0, -1), 'left': (-1, 0), 'right': (1, 0)},
            'bishop': {'ur': (1, 1),   'dr': (1, -1),   'dl': (-1, -1),  'ul': (-1, 1)},
            'knight': {'uur': (1, 2),  'urr': (2, 1),   'drr': (2, -1),  'ddr': (1, -2),
                       'uul': (-1, 2), 'ull': (-2, 1),  'dll': (-2, -1), 'ddl': (-1, -2)}}
 AGENTS = ['pawn', 'bishop', 'knight']
 AGENT_IDX = 0
-N = 1000
+N = 100
 
 
 def main():
@@ -55,9 +47,15 @@ def main():
     # Average number of times visited
     freq /= N
 
+    # Mask for blocked sites
+    mask = np.zeros((HEIGHT, WIDTH), dtype='bool')
+    for obs in world.blocked_pos:
+        mask[obs[0], obs[1]] = True
+
     # Plot heatmap of state visitation rate
     f, ax = plt.subplots()
-    sns.heatmap(freq, annot=True, fmt=".1f", linewidths=1, square=True, ax=ax)
+    g = sns.heatmap(freq, mask=mask, annot=True, fmt=".1f", linewidths=1, square=True, ax=ax)
+    g.set_facecolor('grey')
 
     # Highlight starting grid
     ax.axvline(x=agent.start_pos[0], ymin=0, ymax=1.0 / world.height, color='g', linewidth=2)
@@ -89,7 +87,7 @@ def main():
     plt.show()
 
     # Iterative policy evaluation to find optimal policy
-    # world.show()
+    world.show()
 
 
 def update_pos(idx, history):
