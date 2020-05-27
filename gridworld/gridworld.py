@@ -18,8 +18,8 @@ class GridWorld:
         else:
             self.value = value
 
-        self.value[self.blocked_pos] = 0.0
-        self.value[[[x[0], x[1]] for x in self.term_pos]] = term_reward
+        for x in self.term_pos:
+            self.value[x[0], x[1]] = term_reward
 
     def show(self, policy=None):
         # Calculate grid centers
@@ -48,5 +48,8 @@ class GridWorld:
         plt.show()
 
     def is_valid_action(self, pos, action):
-        new_pos = [sum(x) for x in zip(pos, action)]
-        return 0 <= new_pos[0] < self.width and 0 <= new_pos[1] < self.height
+        new_pos = tuple([sum(x) for x in zip(pos, action)])
+        within_bounds = 0 <= new_pos[0] < self.width and 0 <= new_pos[1] < self.height
+        not_blocked = True if self.blocked_pos is None \
+            else np.all([new_pos != pos for pos in self.blocked_pos])
+        return within_bounds and not_blocked
